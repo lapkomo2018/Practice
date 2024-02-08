@@ -1,15 +1,21 @@
 import './App.css'
-import Header from "./elements/Header/Header.tsx";
+import LoginPanel from "./elements/LoginPanel/LoginPanel.tsx";
+
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { useCollectionData } from "react-firebase-hooks/firestore";
+import { auth, firestore } from "./firebase.ts";
 import Body from "./elements/Body/Body.tsx";
 
 
 function App() {
-  return (
-    <>
-      <Header />
-      <Body />
-    </>
-  )
+    const [user] = useAuthState(auth);
+
+
+    return (
+        <>
+            {user ? <Body/> : <LoginPanel/>}
+        </>
+    )
 }
 
 export default App

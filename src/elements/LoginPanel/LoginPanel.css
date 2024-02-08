@@ -5,6 +5,7 @@
     background-color: #4f4f4f;
     border-radius: 1em;
     width: 15em;
+    margin: auto;
 }
 
 /* Стили для полей ввода */
@@ -68,4 +69,28 @@ button[type="submit"]:hover {
     100%{
         transform: rotate(0deg);
     }
+}
+
+.AlternativeLogins{
+    display: flex;
+    align-items: baseline;
+    justify-content: space-around;
+}
+
+.AlternativeLogins > button {
+
+    background-color: #3f3f3f;
+    color: #ccc;
+    border: none;
+    padding: 0.5em 0.7em;
+    border-radius: 0.5em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+.AlternativeLogins > button:hover {
+    background-color: #757575;
+}
+
+.AlternativeLogins > button > img{
+    height: 2em;
 }

@@ -1,10 +1,11 @@
 import "./Body.css"
-import LoginPanel from "../LoginPanel/LoginPanel.tsx";
+import Header from "../Header/Header.tsx";
 
 export default function Body(){
     return (
         <div className="Body">
-            <LoginPanel />
+            <Header />
+            <h1>U logged</h1>
         </div>
     )
 }
