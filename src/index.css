@@ -1,27 +1,77 @@
-:root {
+body {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-
-  color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-body {
   margin: 0;
-  height: 100vh;
+  background: #242424;
 }
 
 
 @media (prefers-color-scheme: light) {
-  :root {
+  body {
     color: #213547;
     background-color: #ffffff;
   }
+}
+
+.btn-img {
+  background-color: #3f3f3f;
+  color: #ccc;
+  border: none;
+  padding: 0.5em 0.7em;
+  border-radius: 0.5em;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-img:hover {
+  background-color: #757575;
+}
+
+.btn-img > img {
+  height: 2em;
+}
+
+.hover-shake:hover {
+  animation: shake infinite 500ms ease-in-out;
+}
+
+@keyframes shake {
+  0%{
+    transform: rotate(0deg);
+  }
+  25%{
+    transform: rotate(10deg);
+  }
+  75%{
+    transform: rotate(-10deg);
+  }
+  100%{
+    transform: rotate(0deg);
+  }
+}
+
+/* Стили для кнопки */
+.btn-dark {
+
+  background-color: #3f3f3f;
+  color: white;
+  border: none;
+  padding: 0.5em 1em;
+  border-radius: 0.5em;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-dark:hover {
+  background-color: #757575;
+}
+
+.container{
+  width:80%;
 }
