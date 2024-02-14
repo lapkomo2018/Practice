@@ -14,7 +14,7 @@ import ChatComponent from '../../components/ChatComponent.tsx';
 function LobbyPage() {
     const [error, setError] = useState('');
     const { currentUser }: any = useAuth();
-    const { id } = useParams<string>();
+    const { id } = useParams<string>() || null;
     const [lobby, setLobby] = useState<Lobby | null>(null);
     const [lobbyUsers, setLobbyUsers] = useState<User[]>([]);
 
@@ -80,37 +80,31 @@ function LobbyPage() {
         setNewMessage('');
     };
 
-    // При входе пользователя на страницу лобби
-    useEffect(() => {
-        const addUserToLobby = async () => {
-            try {
-                // Проверяем, есть ли текущий пользователь в списке игроков лобби
-                if (lobby && currentUser) {
-                    await updateUser(currentUser.uid, { lobbyId: id });
-                }
-            } catch (error) {
-                setError(`Error adding user to lobby: ${error}`);
-            }
-        };
+    const setCurrentUserLobby = async (lobbyId: string | null) => {
+        try {
+            if(lobbyId && !lobby)
+                return;
 
-        addUserToLobby();
+            await updateUser(currentUser.uid, { lobbyId });
+        } catch (error) {
+            setError(`Error adding user to lobby: ${error}`);
+        }
+    }
+
+    useEffect(() => {
+        setCurrentUserLobby(id as string);
 
         return () => {
-            const removeUserFromLobby = async () => {
-                try {
-                    // Удаляем пользователя из списка игроков лобби при выходе
-                    if (lobby && currentUser) {
-                        await updateUser(currentUser.uid, { lobbyId: null });
-                    }
-                } catch (error) {
-                    setError(`Error removing user from lobby: ${error}`);
-                }
-            };
-
-            removeUserFromLobby();
+            setCurrentUserLobby(null);
         };
     }, [id, currentUser, lobby]);
 
+    useEffect(() => {
+        window.addEventListener('beforeunload', () => setCurrentUserLobby(null));
+        return () => {
+            window.removeEventListener('beforeunload', () => setCurrentUserLobby(null));
+        };
+    }, []);
 
     return (
         <Container className='m-auto d-flex'>
