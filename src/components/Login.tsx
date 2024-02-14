@@ -2,11 +2,12 @@ import React, { useState, useRef, FormEvent } from 'react';
 import { Form, Button, Card, Alert } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext.tsx";
+import Logo from "./Logo.tsx";
 
 export default function Login() {
     const emailRef : any = useRef(null);
     const passRef : any = useRef(null);
-    const { login, currentUser } : any = useAuth();
+    const { login, loginGoogle } : any = useAuth();
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
@@ -32,23 +33,28 @@ export default function Login() {
     };
 
     const handleGoogleLogin = async (e: FormEvent) => {
-        setError('Temporal disabled')
+        try {
+            setError('');
+            setLoading(true);
+            await loginGoogle();
+            navigate('/');
+        } catch (e: any) {
+            setError(`Failed to login in account: ${ e.message }`);
+        }
+        setLoading(false);
     }
 
     return (
         <>
             <Card className='text-white' style={{ background: "#4f4f4f" }}>
                 <Card.Body>
-                    <div className="text-center mb-3">
-                        <a href="https://youtu.be/G510jeWiaV0?si=eJArMLaiPSRRhPr8" target="_blank">
-                            <img src="/tictactoe.svg" alt="Logo" className="img-fluid hover-shake"
-                                 style={{height: "5em"}}/>
-                        </a>
+                    <div className="text-center mb-3" style={{height: "5em"}}>
+                        <Logo/>
                     </div>
                     <h2 className="text-center mb-3">Login</h2>
                     <div className="d-flex align-baseline justify-content-around mb-2">
-                        <button onClick={handleGoogleLogin} className="btn-img">
-                            <img src="/google_g.svg" alt="Google LogIn"/>
+                        <button disabled={true} onClick={handleGoogleLogin} className="btn-img">
+                            <img src="/google_g.svg" alt="Google Log In"/>
                         </button>
                     </div>
                     <Form onSubmit={handleLogin}>
@@ -63,10 +69,13 @@ export default function Login() {
                         <Button disabled={loading} className='w-100 btn-dark' type='submit'>Log In</Button>
                         {error && <Alert variant="danger" className="mt-3">{error}</Alert>}
                     </Form>
+                    <div className="w-100 text-center mt-2">
+                        <Link to='/reset-password'>Forgot Password?</Link>
+                    </div>
                 </Card.Body>
             </Card>
             <div className="w-100 text-center mt-2">
-                <Link to="/register">Sign Up</Link>
+                Need an account?  <Link to="/register">Sign Up</Link>
             </div>
         </>
     );

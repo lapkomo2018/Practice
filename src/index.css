@@ -37,24 +37,15 @@ body {
   height: 2em;
 }
 
-.hover-shake:hover {
-  animation: shake infinite 500ms ease-in-out;
+.hover-shake-right {
+  transition: transform 100ms ease-in-out;
 }
 
-@keyframes shake {
-  0%{
-    transform: rotate(0deg);
-  }
-  25%{
-    transform: rotate(10deg);
-  }
-  75%{
-    transform: rotate(-10deg);
-  }
-  100%{
-    transform: rotate(0deg);
-  }
+.hover-shake-right:hover {
+  transform: rotate(5deg);
 }
+
+
 
 /* Стили для кнопки */
 .btn-dark {

@@ -2,6 +2,7 @@ import React, {FormEvent, useRef, useState} from 'react';
 import {Alert, Button, Card, Form} from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext.tsx";
+import Logo from "./Logo.tsx";
 
 export default function Signup() {
 
@@ -31,9 +32,8 @@ export default function Signup() {
             setLoading(true);
             await signup(email, password);
             navigate('/');
-        } catch (e) {
-            setError('Failed to create an account');
-            console.log("Error: ", e);
+        } catch (e: any) {
+            setError(`Failed to create an account: ${e.message}`);
         }
         setLoading(false);
     };
@@ -42,15 +42,12 @@ export default function Signup() {
         <>
             <Card className='text-white' style={{ background: "#4f4f4f" }}>
                 <Card.Body>
-                    <div className="text-center mb-3">
-                        <a href="https://youtu.be/G510jeWiaV0?si=eJArMLaiPSRRhPr8" target="_blank">
-                            <img src="/tictactoe.svg" alt="Logo" className="img-fluid hover-shake"
-                                 style={{height: "5em"}}/>
-                        </a>
+                    <div className="text-center mb-3" style={{height: "5em"}}>
+                        <Logo/>
                     </div>
                     <h2 className="text-center mb-3">Signup</h2>
                     <Form onSubmit={handleSubmit}>
-                        <Form.Group id="email" className="mb-2">
+                    <Form.Group id="email" className="mb-2">
                             <Form.Label>Email</Form.Label>
                             <Form.Control type="email" ref={emailRef} required/>
                         </Form.Group>
@@ -68,7 +65,7 @@ export default function Signup() {
                 </Card.Body>
             </Card>
             <div className="w-100 text-center mt-2">
-                <Link to="/login">Sign In</Link>
+                Already have account? <Link to="/login">Log In</Link>
             </div>
         </>
     );

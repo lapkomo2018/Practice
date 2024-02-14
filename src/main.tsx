@@ -5,7 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
 import {AuthProvider} from "./contexts/AuthContext.tsx";
 
-ReactDOM.createRoot(document.body).render(
+ReactDOM.createRoot(document.getElementById('app')!).render(
     <React.StrictMode>
         <AuthProvider>
             <App/>
