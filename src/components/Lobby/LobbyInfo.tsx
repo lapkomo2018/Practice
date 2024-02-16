@@ -1,28 +1,16 @@
-import React, {Dispatch, SetStateAction, useEffect} from 'react';
-import {Lobby, User} from "../../elements/types.ts";
-import {subscribeToLobbyUsers} from "../../contexts/Firestore.tsx";
+import React from 'react';
+import {User} from "../../elements/types.ts";
 import {Card} from "react-bootstrap";
+import {useLobby} from "../../contexts/LobbyContext.tsx";
 
-function LobbyInfo({lobby, lobbyUsers, setLobbyUsers}: { lobby: Lobby, lobbyUsers: User[], setLobbyUsers: any }) {
-
-    useEffect(() => {
-        return subscribeToLobbyUsers(lobby.id, (users: User[]) => {
-            try {
-                setLobbyUsers(users);
-            } catch (error) {
-                console.error('Error fetching users:', error);
-            }
-        });
-    }, [lobby]);
-
-
-
+function LobbyInfo() {
+    const { lobby, lobbyUsers } = useLobby();
 
     return (
         <Card className='text-white' style={{background: "#4f4f4f"}}>
-            <h2 className="text-center mb-3">Lobby <strong>{lobby.name}</strong></h2>
+            <h2 className="text-center mb-3">Lobby <strong>{lobby!.name}</strong></h2>
             <Card.Body>
-                Created: {new Date(lobby.createdAt.seconds * 1000).toLocaleString()}
+                Created: {new Date(lobby!.createdAt.seconds * 1000).toLocaleString()}
                 <h4>Users in Lobby:</h4>
                 <ul>
                     {lobbyUsers.map((user: User) => (

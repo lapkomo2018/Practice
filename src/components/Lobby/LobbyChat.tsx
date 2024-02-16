@@ -1,38 +1,28 @@
 import React, {FormEvent, useEffect, useState} from 'react';
 import {Button, Card, Form} from "react-bootstrap";
-import ChatComponent from "../ChatComponent.tsx";
-import {Lobby, LobbyMessage} from "../../elements/types.ts";
-import {addLobbyMessage, subscribeToLobbyMessages} from "../../contexts/Firestore.tsx";
-import {useAuth} from "../../contexts/AuthContext.tsx";
+import {LobbyMessage} from "../../elements/types.ts";
+import {getUserByUid} from "../../contexts/Firestore.tsx";
+import {useLobby} from "../../contexts/LobbyContext.tsx";
 
-function LobbyChat({lobby}: { lobby: Lobby }) {
-
-    const { currentUser }: any = useAuth();
+function LobbyChat() {
+    const { sendMessage }: any = useLobby();
     const [newMessage, setNewMessage] = useState('');
-    const [messages, setMessages ] = useState<LobbyMessage[]>([]);
 
-
-    useEffect(() => {
-        return subscribeToLobbyMessages(lobby.id!, (message: LobbyMessage) =>
-            setMessages((prevMessages: LobbyMessage[]) => ([ ...prevMessages, message ])));
-    }, [lobby]);
-
-    const handleSendMessage = async (e: FormEvent) => {
+    const handleSendMessage = (e: FormEvent) => {
         e.preventDefault();
         if(!newMessage)
             return;
 
-        await addLobbyMessage(lobby.id, currentUser.uid, newMessage);
+        sendMessage(newMessage);
         setNewMessage('');
     };
-
 
     return (
         <Card className='text-white' style={{background: "#4f4f4f"}}>
             <h2 className="text-center mb-3">Chat</h2>
             <Card.Body>
                 <ul style={{minHeight: "300px", maxHeight: '300px', overflow: 'auto'}}>
-                    <ChatComponent messages={messages}></ChatComponent>
+                    <ChatComponent />
                 </ul>
                 <Form onSubmit={handleSendMessage}>
                     <Form.Group>
@@ -47,6 +37,38 @@ function LobbyChat({lobby}: { lobby: Lobby }) {
                 </Form>
             </Card.Body>
         </Card>
+    );
+}
+
+function ChatComponent() {
+    const { messages }: { messages: LobbyMessage[] | [] } = useLobby();
+    const [userNamesCache, setUserNamesCache] = useState<any>({});
+
+    useEffect(() => {
+        messages.forEach(message => {
+            if (!userNamesCache[message.userId]) {
+                fetchUserName(message.userId);
+            }
+        });
+    }, [messages, userNamesCache]);
+
+    const fetchUserName = async (userId: string) => {
+        try {
+            const userName = await getUserByUid(userId);
+            setUserNamesCache((prevCache: any) => ({ ...prevCache, [userId]: userName?.name }));
+        } catch (error) {
+            console.error('Error fetching user name:', error);
+        }
+    };
+
+    return (
+        <>
+            {messages.map(message => (
+                <li key={message.id}>
+                    <strong>{userNamesCache[message.userId] || 'Loading...'}</strong>: {message.content}
+                </li>
+            ))}
+        </>
     );
 }
 

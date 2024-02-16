@@ -1,33 +1,45 @@
 import React, {useEffect, useState} from 'react';
-import {Container} from "react-bootstrap";
-import {useAuth} from "../../contexts/AuthContext.tsx";
-import {Lobby, User} from "../../elements/types.ts";
+import {Lobby} from "../../elements/types.ts";
 import {subscribeLobbies} from "../../contexts/Firestore.tsx";
-import LobbiesComponent from "../../components/LobbiesComponent.tsx";
+import {LobbyProvider, useLobby} from "../../contexts/LobbyContext.tsx";
+import {Badge, Button, ListGroup} from "react-bootstrap";
+import {useNavigate} from "react-router-dom";
 
 function LobbiesPage() {
-
-    const [error, setError] = useState('');
-    const { currentUser }: any = useAuth();
     const [lobbies, setLobbies] = useState<Lobby[] | []>([]);
 
-    useEffect(() => {
-        return subscribeLobbies( (lobbies: Lobby[]) => {
-            try {
-                setLobbies(lobbies);
-            } catch (error) {
-                setError(`Error fetching lobbies: ${error}`);
-            }
-        });
-    }, []);
-
-
-
+    useEffect(() => subscribeLobbies( (lobbies: Lobby[]) => setLobbies(lobbies)), []);
 
     return (
         <div className='p-2 mx-auto w-100'>
-            <LobbiesComponent lobbies={lobbies} />
+            <ListGroup className=''>
+                {lobbies.map(lobby => (
+                    <LobbyProvider key={lobby.id} lobbyId={lobby.id} isLogin={false}>
+                        <LobbyItem />
+                    </LobbyProvider>
+                ))}
+            </ListGroup>
         </div>
+    );
+}
+
+function LobbyItem() {
+    const {lobby, lobbyUsers} = useLobby();
+    const navigate = useNavigate();
+
+    return (
+        <ListGroup.Item variant='dark' className="d-flex justify-content-between align-items-center">
+            <div>
+                <h5>{lobby!.name}</h5>
+                <p>Status: {lobby!.status}</p>
+            </div>
+            <div className='d-flex justify-content-around align-items-baseline'>
+                <p className='mx-3'>Number of Players: <Badge bg="secondary">{lobbyUsers.length}</Badge></p>
+                <Button className='btn-dark' onClick={() => {
+                    navigate(`/lobby/${lobby!.id}`);
+                }}>Join</Button>
+            </div>
+        </ListGroup.Item>
     );
 }
 
