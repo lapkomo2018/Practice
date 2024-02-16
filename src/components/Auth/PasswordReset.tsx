@@ -1,8 +1,8 @@
 import React, {FormEvent, useRef, useState} from 'react';
 import {Alert, Button, Card, Form} from "react-bootstrap";
-import Logo from "./Logo.tsx";
+import Logo from "../Items/Logo.tsx";
 import {Link} from "react-router-dom";
-import {useAuth} from "../contexts/AuthContext.tsx";
+import {useAuth} from "../../contexts/AuthContext.tsx";
 
 function PasswordReset() {
     const emailRef : any = useRef(null);

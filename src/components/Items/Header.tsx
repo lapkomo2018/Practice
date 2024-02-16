@@ -1,4 +1,4 @@
-import { useAuth } from "../contexts/AuthContext.tsx";
+import { useAuth } from "../../contexts/AuthContext.tsx";
 import React, {useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
 import Logo from "./Logo.tsx";
@@ -30,9 +30,8 @@ export default function Header(){
                 <Logo/>
             </Navbar.Brand>
             <Nav className="me-auto">
-                <Nav.Link href="#home">Home</Nav.Link>
-                <Nav.Link href="#features">Features</Nav.Link>
-                <Nav.Link href="#pricing">Pricing</Nav.Link>
+                <Nav.Link href="/">Home</Nav.Link>
+                <Nav.Link href="/lobbies">Lobbies</Nav.Link>
             </Nav>
             <div className='d-flex flex-column text-center'>
                 <Link to="/profile">Profile</Link>

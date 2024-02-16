@@ -29,6 +29,7 @@ export default function MainPage() {
             const docRef: any = await addData('lobbies', {
                 name: lobbyName,
                 status: LobbyStatus.CREATED,
+                createdBy: currentUser.uid,
                 createdAt: Timestamp.now()
             });
 

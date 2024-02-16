@@ -1,7 +1,7 @@
 import React from 'react';
 import {Container} from "react-bootstrap";
-import ProfileUpdate from "../../components/ProfileUpdate.tsx";
-import Header from "../../components/Header.tsx";
+import ProfileUpdate from "../../components/Profile/ProfileUpdate.tsx";
+import Header from "../../components/Items/Header.tsx";
 
 function ProfileUpdatePage() {
     return (

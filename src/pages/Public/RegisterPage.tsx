@@ -1,6 +1,6 @@
 import React from 'react';
 import {Container} from "react-bootstrap";
-import Signup from "../../components/Signup.tsx";
+import Signup from "../../components/Auth/Signup.tsx";
 
 export default function RegisterPage() {
     return (

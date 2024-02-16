@@ -1,7 +1,7 @@
 import React from 'react';
-import Login from "../../components/Login.tsx";
+import Login from "../../components/Auth/Login.tsx";
 import {Container} from "react-bootstrap";
-import PasswordReset from "../../components/PasswordReset.tsx";
+import PasswordReset from "../../components/Auth/PasswordReset.tsx";
 
 export default function PasswordResetPage() {
     return (

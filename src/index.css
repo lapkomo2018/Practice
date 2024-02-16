@@ -45,9 +45,6 @@ body {
   transform: rotate(5deg);
 }
 
-
-
-/* Стили для кнопки */
 .btn-dark {
 
   background-color: #3f3f3f;
@@ -65,4 +62,9 @@ body {
 
 .container{
   width:80%;
+}
+
+.list-group-item-dark{
+   background-color: #4d4d4d; !important;
+  color: rgba(255, 255, 255, 0.75);
 }

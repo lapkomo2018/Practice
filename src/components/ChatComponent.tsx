@@ -7,7 +7,6 @@ function ChatComponent({ messages }: { messages: LobbyMessage[] }) {
 
     useEffect(() => {
         messages.forEach(message => {
-            // Проверяем, есть ли имя пользователя в кэше, и если нет, то делаем запрос к базе данных
             if (!userNamesCache[message.userId]) {
                 fetchUserName(message.userId);
             }

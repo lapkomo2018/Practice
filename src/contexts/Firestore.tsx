@@ -1,9 +1,13 @@
 import {firestore} from "../firebase.ts";
-import {collection, addDoc, setDoc, getDocs, getDoc, doc, onSnapshot, Timestamp, query, where} from 'firebase/firestore'
-import {LobbyMessage, User} from "../elements/types.ts";
+import {collection, addDoc, setDoc, getDocs, getDoc, doc, onSnapshot, Timestamp, query, where, deleteDoc} from 'firebase/firestore'
+import {Lobby, LobbyMessage, User} from "../elements/types.ts";
 
 export function addData(collectionName: string, data: object) {
     return addDoc(collection(firestore, collectionName), data);
+}
+
+export async function delLobby(lobbyId: string){
+    return await deleteDoc(doc(firestore, 'lobbies', lobbyId));
 }
 
 export async function addLobbyMessage(lobbyId: string, userId: string, content: string) {
@@ -27,26 +31,23 @@ export function readRow(collectionName: string, documentId: any){
     return getDoc(doc(firestore, collectionName, documentId));
 }
 
+
+
 export function subscribeToRowChanges(collectionName: string, documentId: string, callback: (doc: any) => void) {
-    // Получаем ссылку на документ
     const documentRef = doc(firestore, collectionName, documentId);
 
-    // Возвращаем функцию отписки от изменений
     return onSnapshot(documentRef, (doc: any) => callback(doc));
 }
 
 export function subscribeToLobbyMessages(lobbyId : string, callback: (message: LobbyMessage) => void) {
     const q = query(collection(firestore, 'lobby-messages'), where('lobbyId', '==', lobbyId));
 
-    // Подписываемся на изменения в запросе
     return onSnapshot(q, (snapshot) => {
         snapshot.docChanges().forEach((change) => {
             if (change.type === 'added') {
-                // Обработка добавленного сообщения
                 const messageData = { id: change.doc.id, ...change.doc.data() };
                 callback(messageData as LobbyMessage);
             }
-            // Другие типы изменений (изменение, удаление) могут быть также обработаны здесь, если нужно
         });
     });
 }
@@ -60,6 +61,24 @@ export function subscribeToLobbyUsers(lobbyId: string, callback: (users: User[])
             users.push({ id: doc.id, ...doc.data() } as User);
         });
         callback(users);
+    });
+}
+
+export function subscribeToLobby(lobbyId: string, callback: (lobby: Lobby) => void){
+    return onSnapshot(doc(firestore, 'lobbies', lobbyId), (snapshot: any) => {
+        const lobby: Lobby = { id: snapshot.id, ...snapshot.data() };
+        callback(lobby);
+    });
+}
+
+export function subscribeLobbies(callback: (users: Lobby[]) => void) {
+
+    return onSnapshot(collection(firestore, 'lobbies'), (snapshot) => {
+        const lobbies: Lobby[] = [];
+        snapshot.forEach((doc) => {
+            lobbies.push({ id: doc.id, ...doc.data() } as Lobby);
+        });
+        callback(lobbies);
     });
 }
 

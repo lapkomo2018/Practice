@@ -1,7 +1,7 @@
 import React from 'react';
 import {Container} from "react-bootstrap";
-import Profile from "../../components/Profile.tsx";
-import Header from "../../components/Header.tsx";
+import Profile from "../../components/Profile/Profile.tsx";
+import Header from "../../components/Items/Header.tsx";
 
 export default function ProfilePage() {
     return (

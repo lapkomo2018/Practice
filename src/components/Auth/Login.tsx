@@ -1,8 +1,8 @@
 import React, { useState, useRef, FormEvent } from 'react';
 import { Form, Button, Card, Alert } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../contexts/AuthContext.tsx";
-import Logo from "./Logo.tsx";
+import { useAuth } from "../../contexts/AuthContext.tsx";
+import Logo from "../Items/Logo.tsx";
 
 export default function Login() {
     const emailRef : any = useRef(null);
