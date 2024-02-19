@@ -49,4 +49,5 @@ export interface User {
     name: string;
     email: string;
     lobbyId: string | null;
+    isLobbyReady: boolean | null;
 }

@@ -34,8 +34,8 @@ function LobbyItem() {
                 <p>Status: {lobby!.status}</p>
             </div>
             <div className='d-flex justify-content-around align-items-baseline'>
-                <p className='mx-3'>Number of Players: <Badge bg="secondary">{lobbyUsers.length}</Badge></p>
-                <Button className='btn-dark' onClick={() => {
+                <p className='mx-3'>Number of Players: <Badge bg="secondary">{lobbyUsers.length}/2</Badge></p>
+                <Button disabled={lobbyUsers.length >= 2} className='btn-dark' onClick={() => {
                     navigate(`/lobby/${lobby!.id}`);
                 }}>Join</Button>
             </div>

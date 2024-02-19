@@ -9,6 +9,7 @@ import {
 } from "./Firestore.tsx";
 import {Lobby, LobbyMessage, User} from "../elements/types.ts";
 import {useAuth} from "./AuthContext.tsx";
+import {useNavigate} from "react-router-dom";
 
 const LobbyContext = React.createContext<
     {
@@ -32,9 +33,10 @@ export function LobbyProvider({ lobbyId, isLogin, children }: { lobbyId: string,
     const { currentUser }: any = useAuth();
     const [lobby, setLobby] = useState<Lobby | null>(null);
     const [loading, setLoading] = useState(true);
-
+    const navigate = useNavigate();
 
     const sendMessage = async (message: string) => await addLobbyMessage(lobby!.id, currentUser.uid, message);
+    const setLobbyReady = async (isLobbyReady: boolean) => await updateUser(currentUser.uid, { isLobbyReady })
 
     const [lobbyUsers, setLobbyUsers] = useState<User[]>([]);
     useEffect(() => {
@@ -71,9 +73,17 @@ export function LobbyProvider({ lobbyId, isLogin, children }: { lobbyId: string,
         if(!isLogin)
             return;
 
-        if(lobbyId == null && lobby != null)
-            if ((await getUsersByLobbyId(lobby.id)).length === 1)
-                await delLobby(lobby.id);
+        if (lobby != null){
+            const lobbyUsers = await getUsersByLobbyId(lobby.id)
+
+            if(lobbyUsers.length >= 2)
+                navigate('/lobbies');
+
+            if(lobbyId == null) {
+                if (lobbyUsers.length === 1 && lobbyUsers[0].id === currentUser.uid)
+                    await delLobby(lobby.id);
+            }
+        }
 
         await updateUser(currentUser.uid, { lobbyId });
     }
@@ -93,7 +103,8 @@ export function LobbyProvider({ lobbyId, isLogin, children }: { lobbyId: string,
         lobby,
         lobbyUsers,
         messages,
-        sendMessage
+        sendMessage,
+        setLobbyReady
     };
 
     return(
