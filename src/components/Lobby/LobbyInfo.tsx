@@ -2,9 +2,11 @@ import React from 'react';
 import {User} from "../../elements/types.ts";
 import {Button, Card} from "react-bootstrap";
 import {useLobby} from "../../contexts/LobbyContext.tsx";
+import {useAuth} from "../../contexts/AuthContext.tsx";
 
 function LobbyInfo() {
-    const { lobby, lobbyUsers } = useLobby();
+    const { lobby, lobbyUsers, setLobbyReady } = useLobby();
+    const { currentUser }: any = useAuth();
 
     return (
         <div>
@@ -15,9 +17,11 @@ function LobbyInfo() {
                     <h4>Users in Lobby:</h4>
                     <ul>
                         {lobbyUsers.map((user: User) => (
-                            <div className='d-flex align-items-center justify-content-between'>
-                                <li key={user.id}>{user.name}</li>
-                                <Button type='submit'></Button>
+                            <div key={user.id} className='d-flex align-items-center justify-content-between'>
+                                <li >{user.name}</li>
+                                {user.id == currentUser.uid ?
+                                    <Button className='btn-dark' onClick={() => setLobbyReady(!user.isLobbyReady)}>{user.isLobbyReady ? 'Ready' : 'No Ready'}</Button> :
+                                    <strong className='mx-3'>{user.isLobbyReady ? 'Ready' : 'No Ready'}</strong>}
                             </div>
                         ))}
                     </ul>

@@ -16,12 +16,14 @@ const LobbyContext = React.createContext<
     lobby: Lobby | null;
     lobbyUsers: User[];
     messages: LobbyMessage[];
-    sendMessage: (message: string) => Promise<any>
+    sendMessage: (message: string) => Promise<any>;
+    setLobbyReady: (isLobbyReady: boolean) => Promise<any>;
 }>({
     lobby: null,
     lobbyUsers: [],
     messages: [],
-    sendMessage: async (message: string) => { return message; },
+    sendMessage: async (message: string) => { return null },
+    setLobbyReady: async (isLobbyReady: boolean) => { return null },
 });
 
 
@@ -73,19 +75,17 @@ export function LobbyProvider({ lobbyId, isLogin, children }: { lobbyId: string,
         if(!isLogin)
             return;
 
-        if (lobby != null){
-            const lobbyUsers = await getUsersByLobbyId(lobby.id)
 
-            if(lobbyUsers.length >= 2)
-                navigate('/lobbies');
+        const lobbyUsers = await getUsersByLobbyId(lobby!.id);
+        if(lobbyUsers.length >= 2)
+            navigate('/lobbies');
 
-            if(lobbyId == null) {
-                if (lobbyUsers.length === 1 && lobbyUsers[0].id === currentUser.uid)
-                    await delLobby(lobby.id);
-            }
+        if(lobbyId == null && lobby != null) {
+            if (lobbyUsers.length === 1 && lobbyUsers[0].id === currentUser.uid)
+                await delLobby(lobby!.id);
         }
 
-        await updateUser(currentUser.uid, { lobbyId });
+        await updateUser(currentUser.uid, { lobbyId, isLobbyReady: false });
     }
     useEffect(() => {
         if (lobby != null)
