@@ -1,6 +1,6 @@
 import {firestore} from "../firebase.ts";
 import {collection, addDoc, setDoc, getDocs, getDoc, doc, onSnapshot, Timestamp, query, where, deleteDoc} from 'firebase/firestore'
-import {Lobby, LobbyMessage, User} from "../elements/types.ts";
+import {Game, Lobby, LobbyMessage, User} from "../elements/types.ts";
 
 export function addData(collectionName: string, data: object) {
     return addDoc(collection(firestore, collectionName), data);
@@ -104,6 +104,27 @@ export async function createUser(user: any): Promise<void> {
         await setDoc(userRef, { id: user.uid, name: user.displayName, email: user.email });
     } catch (error) {
         console.error("Error creating user:", error);
+    }
+}
+
+export async function createGame(game: Game){
+    try {
+        const gamesRef = collection(firestore, 'games');
+        const newGameRef = await addDoc(gamesRef, {...game, createdAt: Timestamp.now()});
+
+        return newGameRef.id;
+
+    } catch (error){
+        console.error("Error creating game:", error);
+    }
+}
+
+export async function updateLobby(id: string, newData: Partial<Lobby>): Promise<void> {
+    try {
+        const userRef = doc(firestore, 'lobbies', id);
+        await setDoc(userRef, { ...newData }, { merge: true });
+    } catch (error) {
+        console.error("Error updating lobby:", error);
     }
 }
 

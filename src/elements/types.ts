@@ -3,6 +3,7 @@ import { Timestamp } from "firebase/firestore";
 export interface Lobby {
     id: string;
     name: string;
+    gameId: string;
     createdAt: Timestamp;
     status: LobbyStatus;
 }
@@ -17,9 +18,15 @@ export enum LobbyStatus {
 export interface Game {
     id: string;
     lobbyId: string;
-    players: string[];
+    players: Player[];
+    moves: Move[];
     status: GameStatus;
     createdAt: Timestamp;
+}
+
+export interface Player {
+    id: string;
+    symbol: string;
 }
 
 export enum GameStatus {
@@ -30,8 +37,6 @@ export enum GameStatus {
 }
 
 export interface Move {
-    id: string;
-    gameId: string;
     playerId: string;
     movePosition: number[];
     timestamp: Timestamp;

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Lobby} from "../../elements/types.ts";
+import {Lobby, LobbyStatus} from "../../elements/types.ts";
 import {subscribeLobbies} from "../../contexts/Firestore.tsx";
 import {LobbyProvider, useLobby} from "../../contexts/LobbyContext.tsx";
 import {Badge, Button, ListGroup} from "react-bootstrap";
@@ -35,7 +35,7 @@ function LobbyItem() {
             </div>
             <div className='d-flex justify-content-around align-items-baseline'>
                 <p className='mx-3'>Number of Players: <Badge bg="secondary">{lobbyUsers.length}/2</Badge></p>
-                <Button disabled={lobbyUsers.length >= 2} className='btn-dark' onClick={() => {
+                <Button disabled={lobbyUsers.length >= 2 || lobby?.status != LobbyStatus.CREATED} className='btn-dark' onClick={() => {
                     navigate(`/lobby/${lobby!.id}`);
                 }}>Join</Button>
             </div>
