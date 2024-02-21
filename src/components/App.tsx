@@ -7,7 +7,6 @@ import LoginPage from "../pages/Public/LoginPage.tsx";
 import PasswordResetPage from "../pages/Public/PasswordResetPage.tsx";
 import MainPage from "../pages/Private/MainPage.tsx";
 import ProfilePage from "../pages/Private/ProfilePage.tsx";
-import ProfileUpdatePage from "../pages/Private/ProfileUpdatePage.tsx";
 import Header from "./Items/Header.tsx";
 import LobbyPage from "../pages/Private/LobbyPage.tsx";
 import GamePage from "../pages/Private/GamePage.tsx";
@@ -23,7 +22,6 @@ export default function App() {
 
                     <Route path="/" element={<PrivateRoute children={<MainPage />}/>} />
                     <Route path="/profile" element={<PrivateRoute children={<ProfilePage />}/>} />
-                    <Route path="/profile-update" element={<PrivateRoute children={<ProfileUpdatePage />}/>} />
                     <Route path="/lobbies" element={<PrivateRoute children={<LobbiesPage />}/>} />
                     <Route path="/lobby/:id" element={<PrivateRoute children={<LobbyPage />}/>} />
                     <Route path="/game/:id" element={<PrivateRoute children={<GamePage />}/>} />

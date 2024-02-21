@@ -6,7 +6,8 @@ import {
     sendPasswordResetEmail,
     signInWithEmailAndPassword,
     signInWithPopup,
-    signOut
+    signOut,
+    updateProfile
 } from "firebase/auth";
 import {createUser, getUserByUid, updateUser} from "./Firestore.tsx";
 
@@ -41,6 +42,10 @@ export function AuthProvider({ children }: any){
         return sendPasswordResetEmail(auth, email);
     }
 
+    function updateAuthProfile(data: any){
+        return updateProfile(auth.currentUser, data);
+    }
+
 
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged( async (user: any) => {
@@ -48,14 +53,11 @@ export function AuthProvider({ children }: any){
             setLoading(false);
 
             if (user) {
-                // Проверяем, существует ли пользователь в базе данных Firestore
                 const userData = await getUserByUid(user.uid);
                 if (!userData) {
-                    // Если пользователя нет в базе данных, создаем его
                     await createUser(user);
                 } else {
                     if (userData.email !== user.email) {
-                        // Если данные отличаются, обновляем запись в базе данных
                         await updateUser(user.uid, { email: user.email });
                     }
                 }
@@ -72,6 +74,7 @@ export function AuthProvider({ children }: any){
         signup,
         logout,
         resetPassword,
+        updateAuthProfile,
     }
 
     return (
