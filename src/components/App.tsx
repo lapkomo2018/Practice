@@ -1,6 +1,6 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { useAuth } from "../contexts/AuthContext.tsx";
+import {BrowserRouter as Router, Navigate, Route, Routes} from 'react-router-dom';
+import {useAuth} from "../contexts/AuthContext.tsx";
 
 import RegisterPage from "../pages/Public/RegisterPage.tsx";
 import LoginPage from "../pages/Public/LoginPage.tsx";

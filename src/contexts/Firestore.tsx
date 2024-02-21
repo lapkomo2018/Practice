@@ -1,5 +1,17 @@
 import {firestore} from "../firebase.ts";
-import {collection, addDoc, setDoc, getDocs, getDoc, doc, onSnapshot, Timestamp, query, where, deleteDoc} from 'firebase/firestore'
+import {
+    addDoc,
+    collection,
+    deleteDoc,
+    doc,
+    getDoc,
+    getDocs,
+    onSnapshot,
+    query,
+    setDoc,
+    Timestamp,
+    where
+} from 'firebase/firestore'
 import {Game, Lobby, LobbyMessage, User} from "../elements/types.ts";
 
 export function addData(collectionName: string, data: object) {

@@ -1,5 +1,4 @@
 import React from 'react';
-import Login from "../../components/Auth/Login.tsx";
 import {Container} from "react-bootstrap";
 import PasswordReset from "../../components/Auth/PasswordReset.tsx";
 

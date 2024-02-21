@@ -1,6 +1,13 @@
 import React, {useContext, useEffect, useState} from 'react';
-import { auth } from "../firebase.ts";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, signOut, sendPasswordResetEmail } from "firebase/auth";
+import {auth} from "../firebase.ts";
+import {
+    createUserWithEmailAndPassword,
+    GoogleAuthProvider,
+    sendPasswordResetEmail,
+    signInWithEmailAndPassword,
+    signInWithPopup,
+    signOut
+} from "firebase/auth";
 import {createUser, getUserByUid, updateUser} from "./Firestore.tsx";
 
 const AuthContext = React.createContext(null);

@@ -1,6 +1,6 @@
 import React, {FormEvent, useRef, useState} from 'react';
-import { useAuth } from "../../contexts/AuthContext.tsx";
-import {Container, Button, Form, Alert} from "react-bootstrap";
+import {useAuth} from "../../contexts/AuthContext.tsx";
+import {Alert, Button, Container, Form} from "react-bootstrap";
 import {useNavigate} from "react-router-dom";
 import {addData} from "../../contexts/Firestore.tsx";
 import {Timestamp} from "firebase/firestore";
