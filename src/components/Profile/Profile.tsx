@@ -12,7 +12,8 @@ export default  function Profile() {
     const navigate = useNavigate();
 
     const handleSaveName = async () => {
-        await updateAuthProfile({displayName: newName})
+        await updateAuthProfile({displayName: newName});
+        window.location.reload();
         setEditingName(false);
     };
 
@@ -28,11 +29,11 @@ export default  function Profile() {
                     <h2 className="text-center mb-3">Profile</h2>
                     <strong>Email: </strong>{currentUser.email} <br/>
                     <strong>Name: </strong>{editingName ? (
-                    <div className='d-flex  align-items-center'>
+                    <form onSubmit={handleSaveName} className='d-flex  align-items-center'>
                         <input type="text" value={newName} onChange={(e: any) => setNewName(e.target.value)} />
-                        <Button variant="success" className='mx-1' onClick={handleSaveName}>Save</Button>
+                        <Button type='submit' variant="success" className='mx-1'>Save</Button>
                         <Button variant="danger" onClick={handleCancelNameEdit}>Cancel</Button>
-                    </div>
+                    </form>
                 ) : (
                     <>
                         {currentUser.displayName ? currentUser.displayName : "None"}

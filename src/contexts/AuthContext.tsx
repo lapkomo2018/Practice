@@ -46,9 +46,8 @@ export function AuthProvider({ children }: any){
         return updateProfile(auth.currentUser, data);
     }
 
-
     useEffect(() => {
-        const unsubscribe = auth.onAuthStateChanged( async (user: any) => {
+        return auth.onAuthStateChanged(async (user: any) => {
             setCurrentUser(user);
             setLoading(false);
 
@@ -57,14 +56,12 @@ export function AuthProvider({ children }: any){
                 if (!userData) {
                     await createUser(user);
                 } else {
-                    if (userData.email !== user.email) {
-                        await updateUser(user.uid, { email: user.email });
+                    if (userData.email !== user.email || userData.name !== user.displayName) {
+                        await updateUser(user.uid, {email: user.email, name: user.displayName});
                     }
                 }
             }
         });
-
-        return unsubscribe;
     }, []);
 
     const value : any = {

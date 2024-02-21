@@ -20,7 +20,7 @@ function LobbyInfo() {
                             <div key={user.id} className='d-flex align-items-center justify-content-between'>
                                 <li >{user.name}</li>
                                 {user.id == currentUser.uid ?
-                                    <Button className='btn-dark' onClick={() => setLobbyReady(!user.isLobbyReady)}>{user.isLobbyReady ? 'Ready' : 'No Ready'}</Button> :
+                                    <Button className='btn-dark' onClick={() => setLobbyReady(!user.isLobbyReady)}>{<strong>{user.isLobbyReady ? 'Ready' : 'No Ready'}</strong>}</Button> :
                                     <strong className='mx-3'>{user.isLobbyReady ? 'Ready' : 'No Ready'}</strong>}
                             </div>
                         ))}

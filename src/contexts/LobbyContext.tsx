@@ -71,9 +71,13 @@ export function LobbyProvider({ lobbyId, isLogin, children }: { lobbyId: string,
 
 
     useEffect(() => {
-        return subscribeToLobby(lobbyId, (lobby) => {
+        return subscribeToLobby(lobbyId,  async (lobby) => {
             if(!lobby.createdAt)
                 return;
+
+            const lobbyUsers = await getUsersByLobbyId(lobby.id);
+            if(lobbyUsers.length >= 2 || lobby.gameId != null)
+                navigate('/lobbies');
 
             setLobby(lobby);
             setLoading(false);
@@ -113,16 +117,9 @@ export function LobbyProvider({ lobbyId, isLogin, children }: { lobbyId: string,
         if(!isLogin)
             return;
 
-        if(lobby){
-            const lobbyUsers = await getUsersByLobbyId(lobby.id);
-            if(lobbyUsers.length >= 2 && lobby.gameId === null)
-                navigate('/lobbies');
-
-            if(lobbyId == null) {
-                if (lobbyUsers.length === 1 && lobbyUsers[0].id === currentUser.uid)
-                    await delLobby(lobby!.id);
-            }
-        }
+        if(lobby && lobbyId == null)
+            if (lobbyUsers.length === 1 && lobbyUsers[0].id === currentUser.uid)
+                await delLobby(lobby!.id);
 
         await updateUser(currentUser.uid, { lobbyId, isLobbyReady: false });
     }
