@@ -20,10 +20,12 @@ export function useGame(){
 }
 
 
-export function GameProvider({ gameId, isLogin, children }: { gameId: string, isLogin: boolean, children: any }) {
+export function GameProvider({ gameId, children }: { gameId: string, children: any }) {
     const { currentUser }: any = useAuth();
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
+
+
 
     const [game, setGame] = useState<Game | null>(null);
     const [gameUsers, setGameUsers] = useState<User[]>([]);
@@ -35,7 +37,7 @@ export function GameProvider({ gameId, isLogin, children }: { gameId: string, is
             if(game.players.filter((player: Player) => player.id == currentUser.uid).length == 0)
                 navigate('/');
 
-            const usersPromises: Promise<User>[] = game.players.map(async (player) => await getUserByUid(player.id));
+            const usersPromises: Promise<User>[] = game.players.map(async (player) => await getUserByUid(player.id)) as Promise<User>[];
             const users: User[] = await Promise.all(usersPromises);
 
             setGameUsers(users);
@@ -43,30 +45,6 @@ export function GameProvider({ gameId, isLogin, children }: { gameId: string, is
             setLoading(false);
         });
     }, [gameId]);
-
-    useEffect(() => {
-        const handleBeforeUnload = async () => {
-            if (!isLogin || !game || game.status === GameStatus.COMPLETED)
-                return;
-
-            const winner = game.players.find((player: Player) => player.id !== currentUser.uid)?.symbol;
-            if (winner) {
-                await updateGame(game.id, { winner, status: GameStatus.COMPLETED });
-                await delLobby(game.lobbyId);
-            }
-        };
-
-        const handleUnload = () => {
-            handleBeforeUnload();
-        };
-
-        window.addEventListener('beforeunload', handleUnload);
-
-        return () => {
-            window.removeEventListener('beforeunload', handleUnload);
-        };
-    }, [game]);
-
 
     function calculateWinner(moves: Move[]) {
         const squares = Array(9).fill(null);
@@ -90,8 +68,7 @@ export function GameProvider({ gameId, isLogin, children }: { gameId: string, is
         }
         return null;
     }
-
-    const doMove = async (position, symbol) =>{
+    const doMove = async (position: number, symbol: string) =>{
         if(!game)
             return;
 

@@ -14,6 +14,7 @@ function LobbiesPage() {
         <div className='p-2 mx-auto w-100'>
             <ListGroup className=''>
                 {lobbies.map(lobby => (
+                    lobby?.status == LobbyStatus.CREATED &&
                     <LobbyProvider key={lobby.id} lobbyId={lobby.id} isLogin={false}>
                         <LobbyItem />
                     </LobbyProvider>
@@ -35,7 +36,7 @@ function LobbyItem() {
             </div>
             <div className='d-flex justify-content-around align-items-baseline'>
                 <p className='mx-3'>Number of Players: <Badge bg="secondary">{lobbyUsers.length}/2</Badge></p>
-                <Button disabled={lobbyUsers.length >= 2 || lobby?.status != LobbyStatus.CREATED} className='btn-dark' onClick={() => {
+                <Button disabled={lobbyUsers.length >= 2} className='btn-dark' onClick={() => {
                     navigate(`/lobby/${lobby!.id}`);
                 }}>Join</Button>
             </div>

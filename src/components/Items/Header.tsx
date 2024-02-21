@@ -2,7 +2,7 @@ import { useAuth } from "../../contexts/AuthContext.tsx";
 import React, {useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
 import Logo from "./Logo.tsx";
-import {Container, Nav, Navbar} from "react-bootstrap";
+import {Nav, Navbar} from "react-bootstrap";
 
 export default function Header(){
     const { logout } : any = useAuth();

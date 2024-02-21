@@ -6,7 +6,7 @@ import {
     getUsersByLobbyId,
     subscribeToLobby,
     subscribeToLobbyMessages,
-    subscribeToLobbyUsers, updateGame,
+    subscribeToLobbyUsers,
     updateLobby,
     updateUser
 } from "./Firestore.tsx";
@@ -46,7 +46,6 @@ export function LobbyProvider({ lobbyId, isLogin, children }: { lobbyId: string,
 
         if(isLobbyReady && readyUsers.length == 1)
             startGame(lobbyUsers);
-
 
         await updateUser(currentUser.uid, { isLobbyReady });
     }
@@ -109,31 +108,32 @@ export function LobbyProvider({ lobbyId, isLogin, children }: { lobbyId: string,
 
     }, [lobby]);
 
-    useEffect(() => {
-        const handleBeforeUnload = async (lobbyId: string | null) => {
-            if(!isLogin)
-                return;
 
-            if(lobby){
-                const lobbyUsers = await getUsersByLobbyId(lobby.id);
-                if(lobbyUsers.length >= 2 && lobby.gameId === null)
-                    navigate('/lobbies');
+    const setCurrentUserLobby = async (lobbyId: string | null) => {
+        if(!isLogin)
+            return;
 
-                if(lobbyId == null) {
-                    if (lobbyUsers.length === 1 && lobbyUsers[0].id === currentUser.uid)
-                        await delLobby(lobby!.id);
-                }
+        if(lobby){
+            const lobbyUsers = await getUsersByLobbyId(lobby.id);
+            if(lobbyUsers.length >= 2 && lobby.gameId === null)
+                navigate('/lobbies');
+
+            if(lobbyId == null) {
+                if (lobbyUsers.length === 1 && lobbyUsers[0].id === currentUser.uid)
+                    await delLobby(lobby!.id);
             }
+        }
 
-            await updateUser(currentUser.uid, { lobbyId, isLobbyReady: false });
-        };
+        await updateUser(currentUser.uid, { lobbyId, isLobbyReady: false });
+    }
+    useEffect(() => {
+        if (lobby != null)
+            setCurrentUserLobby(lobby.id);
 
-        if (lobby)
-            handleBeforeUnload(lobby.id);
-
-        window.addEventListener('beforeunload', () => handleBeforeUnload(null));
+        window.addEventListener('beforeunload', () => setCurrentUserLobby(null));
         return () => {
-            window.removeEventListener('beforeunload', () => handleBeforeUnload(null));
+            setCurrentUserLobby(null);
+            window.removeEventListener('beforeunload', () => setCurrentUserLobby(null));
         };
     }, [lobby]);
 
