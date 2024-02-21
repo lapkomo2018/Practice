@@ -64,10 +64,29 @@ export function subscribeToLobbyUsers(lobbyId: string, callback: (users: User[])
     });
 }
 
+export function subscribeToGameUsers(gameId: string, callback: (users: User[]) => void) {
+    const q = query(collection(firestore, 'users'), where('gameId', '==', gameId));
+
+    return onSnapshot(q, (snapshot) => {
+        const users: User[] = [];
+        snapshot.forEach((doc) => {
+            users.push({ id: doc.id, ...doc.data() } as User);
+        });
+        callback(users);
+    });
+}
+
 export function subscribeToLobby(lobbyId: string, callback: (lobby: Lobby) => void){
     return onSnapshot(doc(firestore, 'lobbies', lobbyId), (snapshot: any) => {
         const lobby: Lobby = { id: snapshot.id, ...snapshot.data() };
         callback(lobby);
+    });
+}
+
+export function subscribeToGame(gameId: string, callback: (game: Game) => void){
+    return onSnapshot(doc(firestore, 'games', gameId), (snapshot: any) => {
+        const game: Game = { id: snapshot.id, ...snapshot.data() };
+        callback(game);
     });
 }
 
@@ -125,6 +144,15 @@ export async function updateLobby(id: string, newData: Partial<Lobby>): Promise<
         await setDoc(userRef, { ...newData }, { merge: true });
     } catch (error) {
         console.error("Error updating lobby:", error);
+    }
+}
+
+export async function updateGame(id: string, newData: Partial<Game>): Promise<void> {
+    try {
+        const userRef = doc(firestore, 'games', id);
+        await setDoc(userRef, { ...newData }, { merge: true });
+    } catch (error) {
+        console.error("Error updating game:", error);
     }
 }
 

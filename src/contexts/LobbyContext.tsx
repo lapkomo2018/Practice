@@ -6,7 +6,7 @@ import {
     getUsersByLobbyId,
     subscribeToLobby,
     subscribeToLobbyMessages,
-    subscribeToLobbyUsers,
+    subscribeToLobbyUsers, updateGame,
     updateLobby,
     updateUser
 } from "./Firestore.tsx";
@@ -44,7 +44,7 @@ export function LobbyProvider({ lobbyId, isLogin, children }: { lobbyId: string,
     const setLobbyReady = async (isLobbyReady: boolean) => {
         const readyUsers = lobbyUsers.filter((user) => user.isLobbyReady === true)
 
-        if(readyUsers.length == 1)
+        if(isLobbyReady && readyUsers.length == 1)
             startGame(lobbyUsers);
 
 
@@ -91,6 +91,7 @@ export function LobbyProvider({ lobbyId, isLogin, children }: { lobbyId: string,
             lobbyId: lobbyId,
             players: players,
             moves: [],
+            current: 'X',
             status: GameStatus.CREATED,
         }
 
@@ -108,35 +109,33 @@ export function LobbyProvider({ lobbyId, isLogin, children }: { lobbyId: string,
 
     }, [lobby]);
 
-
-    const setCurrentUserLobby = async (lobbyId: string | null) => {
-        if(!isLogin)
-            return;
-
-        if(lobby){
-            const lobbyUsers = await getUsersByLobbyId(lobby.id);
-            if(lobbyUsers.length >= 2 && lobby.gameId === null)
-                navigate('/lobbies');
-
-            if(lobbyId == null) {
-                if (lobbyUsers.length === 1 && lobbyUsers[0].id === currentUser.uid)
-                    await delLobby(lobby!.id);
-            }
-        }
-
-        await updateUser(currentUser.uid, { lobbyId, isLobbyReady: false });
-    }
     useEffect(() => {
-        if (lobby != null)
-            setCurrentUserLobby(lobby.id);
+        const handleBeforeUnload = async (lobbyId: string | null) => {
+            if(!isLogin)
+                return;
 
-        window.addEventListener('beforeunload', () => setCurrentUserLobby(null));
+            if(lobby){
+                const lobbyUsers = await getUsersByLobbyId(lobby.id);
+                if(lobbyUsers.length >= 2 && lobby.gameId === null)
+                    navigate('/lobbies');
+
+                if(lobbyId == null) {
+                    if (lobbyUsers.length === 1 && lobbyUsers[0].id === currentUser.uid)
+                        await delLobby(lobby!.id);
+                }
+            }
+
+            await updateUser(currentUser.uid, { lobbyId, isLobbyReady: false });
+        };
+
+        if (lobby)
+            handleBeforeUnload(lobby.id);
+
+        window.addEventListener('beforeunload', () => handleBeforeUnload(null));
         return () => {
-            setCurrentUserLobby(null);
-            window.removeEventListener('beforeunload', () => setCurrentUserLobby(null));
+            window.removeEventListener('beforeunload', () => handleBeforeUnload(null));
         };
     }, [lobby]);
-
 
     const value = {
         lobby,

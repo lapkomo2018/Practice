@@ -20,7 +20,9 @@ export interface Game {
     lobbyId: string;
     players: Player[];
     moves: Move[];
+    current: string;
     status: GameStatus;
+    winner: string;
     createdAt: Timestamp;
 }
 
@@ -37,8 +39,8 @@ export enum GameStatus {
 }
 
 export interface Move {
-    playerId: string;
-    movePosition: number[];
+    symbol: string;
+    movePosition: number;
     timestamp: Timestamp;
 }
 export interface LobbyMessage {
@@ -54,5 +56,6 @@ export interface User {
     name: string;
     email: string;
     lobbyId: string | null;
+    gameId: string | null;
     isLobbyReady: boolean | null;
 }
