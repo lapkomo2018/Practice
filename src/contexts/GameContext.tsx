@@ -66,6 +66,8 @@ export function GameProvider({ gameId, children }: { gameId: string, children: a
                 return squares[a];
             }
         }
+        if(squares.filter((symbol: string) => symbol == null).length == 0)
+            return 'Tie';
         return null;
     }
     const doMove = async (position: number, symbol: string) =>{

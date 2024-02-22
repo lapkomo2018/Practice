@@ -76,8 +76,10 @@ export function LobbyProvider({ lobbyId, isLogin, children }: { lobbyId: string,
                 return;
 
             const lobbyUsers = await getUsersByLobbyId(lobby.id);
-            if(lobbyUsers.length >= 2 || lobby.gameId != null)
-                navigate('/lobbies');
+            if(lobbyUsers.length >= 2 && lobby.gameId == null)
+                if(lobbyUsers.filter((user: User) => user.id == currentUser.uid).length == 0)
+                    navigate('/lobbies');
+
 
             setLobby(lobby);
             setLoading(false);
